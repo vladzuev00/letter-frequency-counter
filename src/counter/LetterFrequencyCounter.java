@@ -7,59 +7,55 @@ import static java.util.stream.IntStream.range;
 import static java.util.stream.IntStream.rangeClosed;
 
 public abstract class LetterFrequencyCounter {
-    private static final String NOT_LETTER_REGEX = "[^a-zA-Z]";
+    private final int subtaskCount;
 
-    private final int threadCount;
-
-    public LetterFrequencyCounter(final int threadCount) {
-        this.threadCount = threadCount;
+    public LetterFrequencyCounter(final int subtaskCount) {
+        this.subtaskCount = subtaskCount;
     }
 
     public final Map<Character, Integer> count(final String input) {
         final Map<Character, Integer> accumulator = createAccumulator();
-        final char[] chars = getLettersInLowerCase(input);
-        execute(createSubtasks(accumulator, chars));
+        final char[] chars = input.toCharArray();
+        final Stream<LetterFrequencySubtask> subtasks = createSubtasks(accumulator, chars);
+        execute(subtasks);
         return accumulator;
     }
 
     protected abstract Map<Character, Integer> createAccumulator();
 
-    protected abstract void execute(final Stream<FrequencySubtask> tasks);
+    protected abstract void execute(final Stream<LetterFrequencySubtask> tasks);
 
-    private char[] getLettersInLowerCase(final String input) {
-        return input.replaceAll(NOT_LETTER_REGEX, "")
-                .toLowerCase()
-                .toCharArray();
+    private Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator, final char[] chars) {
+        final int subtaskCharCount = chars.length / subtaskCount;
+        return range(0, subtaskCount).mapToObj(i -> new LetterFrequencySubtask(accumulator, chars, i * subtaskCharCount, i * subtaskCount * subtaskCharCount - 1));
     }
 
-    private Stream<FrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator, final char[] chars) {
-        final int subtaskCharCount = chars.length / threadCount;
-        return range(0, threadCount).mapToObj(i -> new FrequencySubtask(accumulator, chars, i * subtaskCharCount, i * threadCount * subtaskCharCount - 1));
-    }
-
-    protected static final class FrequencySubtask implements Runnable {
+    protected static final class LetterFrequencySubtask {
         private final Map<Character, Integer> accumulator;
         private final char[] chars;
         private final int start;
         private final int end;
 
-        public FrequencySubtask(final Map<Character, Integer> accumulator,
-                                final char[] chars,
-                                final int start,
-                                final int end) {
+        public LetterFrequencySubtask(final Map<Character, Integer> accumulator,
+                                      final char[] chars,
+                                      final int start,
+                                      final int end) {
             this.accumulator = accumulator;
             this.chars = chars;
             this.start = start;
             this.end = end;
         }
 
-        @Override
-        public void run() {
-            rangeClosed(start, end).forEach(this::accumulate);
+        public void execute() {
+            rangeClosed(start, end)
+                    .map(i -> chars[i])
+                    .filter(Character::isLetter)
+                    .map(Character::toLowerCase)
+                    .forEach(this::accumulate);
         }
 
-        private void accumulate(final int index) {
-            accumulator.merge(chars[index], 1, Integer::sum);
+        private void accumulate(final int codePoint) {
+            accumulator.merge((char) codePoint, 1, Integer::sum);
         }
     }
 }

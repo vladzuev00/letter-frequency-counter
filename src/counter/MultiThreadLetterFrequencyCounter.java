@@ -18,7 +18,7 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
     }
 
     @Override
-    protected void execute(final Stream<FrequencySubtask> tasks) {
+    protected void execute(final Stream<LetterFrequencySubtask> tasks) {
         List<Thread> threads = tasks.map(Thread::new).toList();
         threads.forEach(Thread::start);
         threads.forEach(thread -> {
