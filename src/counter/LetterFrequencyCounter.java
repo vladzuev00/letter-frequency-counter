@@ -15,8 +15,7 @@ public abstract class LetterFrequencyCounter {
 
     public final Map<Character, Integer> count(final String input) {
         final Map<Character, Integer> accumulator = createAccumulator();
-        final char[] chars = input.toCharArray();
-        final Stream<LetterFrequencySubtask> subtasks = createSubtasks(accumulator, chars);
+        final Stream<LetterFrequencySubtask> subtasks = createSubtasks(accumulator, input);
         execute(subtasks);
         return accumulator;
     }
@@ -25,7 +24,8 @@ public abstract class LetterFrequencyCounter {
 
     protected abstract void execute(final Stream<LetterFrequencySubtask> tasks);
 
-    private Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator, final char[] chars) {
+    private Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator, final String input) {
+        final char[] chars = input.toCharArray();
         final int subtaskCharCount = chars.length / subtaskCount;
         return range(0, subtaskCount).mapToObj(i -> createSubtask(accumulator, chars, subtaskCharCount, i));
     }
