@@ -16,7 +16,7 @@ public final class SingleThreadLetterFrequencyCounter extends LetterFrequencyCou
     }
 
     @Override
-    protected void execute(final Stream<LetterFrequencySubtask> tasks) {
-        tasks.forEach(LetterFrequencySubtask::execute);
+    protected void execute(final Stream<LetterFrequencySubtask> subtasks) {
+        subtasks.forEach(LetterFrequencySubtask::execute);
     }
 }
