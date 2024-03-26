@@ -3,6 +3,7 @@ package counter;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static java.lang.Math.ceil;
 import static java.lang.Math.min;
 import static java.util.stream.IntStream.range;
 
@@ -26,8 +27,12 @@ public abstract class LetterFrequencyCounter {
 
     private Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator, final String input) {
         final char[] chars = input.toCharArray();
-        final int subtaskCharCount = (int) Math.ceil((double) chars.length / (double) subtaskCount);
+        final int subtaskCharCount = findSubtaskCharCount(chars);
         return range(0, subtaskCount).mapToObj(i -> createSubtask(accumulator, chars, subtaskCharCount, i));
+    }
+
+    private int findSubtaskCharCount(final char[] chars) {
+        return (int) ceil((double) chars.length / subtaskCount);
     }
 
     private static LetterFrequencySubtask createSubtask(final Map<Character, Integer> accumulator,
