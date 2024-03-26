@@ -3,8 +3,8 @@ package counter;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static java.lang.Math.min;
 import static java.util.stream.IntStream.range;
-import static java.util.stream.IntStream.rangeClosed;
 
 public abstract class LetterFrequencyCounter {
     private final int subtaskCount;
@@ -27,7 +27,16 @@ public abstract class LetterFrequencyCounter {
 
     private Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator, final char[] chars) {
         final int subtaskCharCount = chars.length / subtaskCount;
-        return range(0, subtaskCount).mapToObj(i -> new LetterFrequencySubtask(accumulator, chars, i * subtaskCharCount, i * subtaskCount * subtaskCharCount - 1));
+        return range(0, subtaskCount).mapToObj(i -> createSubtask(accumulator, chars, subtaskCharCount, i));
+    }
+
+    private static LetterFrequencySubtask createSubtask(final Map<Character, Integer> accumulator,
+                                                        final char[] chars,
+                                                        final int subtaskCharCount,
+                                                        final int index) {
+        final int start = index * subtaskCharCount;
+        final int end = min((index + 1) * subtaskCharCount, chars.length);
+        return new LetterFrequencySubtask(accumulator, chars, start, end);
     }
 
     protected static final class LetterFrequencySubtask {
@@ -47,7 +56,7 @@ public abstract class LetterFrequencyCounter {
         }
 
         public void execute() {
-            rangeClosed(start, end)
+            range(start, end)
                     .map(i -> chars[i])
                     .filter(Character::isLetter)
                     .map(Character::toLowerCase)

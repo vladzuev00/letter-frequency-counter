@@ -1,6 +1,5 @@
 package counter;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
@@ -19,14 +18,14 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
 
     @Override
     protected void execute(final Stream<LetterFrequencySubtask> tasks) {
-        List<Thread> threads = tasks.map(Thread::new).toList();
-        threads.forEach(Thread::start);
-        threads.forEach(thread -> {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
+//        List<Thread> threads = tasks.map(Thread::new).toList();
+//        threads.forEach(Thread::start);
+//        threads.forEach(thread -> {
+//            try {
+//                thread.join();
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
     }
 }
