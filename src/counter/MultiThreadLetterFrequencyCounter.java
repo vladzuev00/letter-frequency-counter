@@ -21,7 +21,7 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
     @Override
     protected void execute(final Stream<LetterFrequencySubtask> subtasks) {
         final List<Thread> threads = run(subtasks);
-        threads.forEach(this::waitUntilFinish);
+        waitUntilFinish(threads);
     }
 
     private List<Thread> run(final Stream<LetterFrequencySubtask> subtasks) {
@@ -32,6 +32,10 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
         final Thread thread = new Thread(subtask::execute);
         thread.start();
         return thread;
+    }
+
+    private void waitUntilFinish(final List<Thread> threads) {
+        threads.forEach(this::waitUntilFinish);
     }
 
     private void waitUntilFinish(final Thread thread) {
