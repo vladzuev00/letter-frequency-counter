@@ -9,8 +9,8 @@ import static java.lang.Thread.currentThread;
 
 public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCounter {
 
-    public MultiThreadLetterFrequencyCounter(final int taskCharCount) {
-        super(taskCharCount);
+    public MultiThreadLetterFrequencyCounter(final int subtaskCount) {
+        super(subtaskCount);
     }
 
     @Override
