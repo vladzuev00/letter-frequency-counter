@@ -2,9 +2,9 @@ import counter.LetterFrequencyCounter;
 import counter.MultiThreadLetterFrequencyCounter;
 import counter.SingleThreadLetterFrequencyCounter;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Map.entry;
@@ -23,14 +23,14 @@ public final class Main {
 
     private static void testCounter(final LetterFrequencyCounter counter, final TestArgument argument) {
         final Map<Character, Integer> actual = counter.count(argument.givenText);
-        final boolean testSuccess = Objects.equals(argument.expected, actual);
-        if (!testSuccess) {
+        final boolean success = Objects.equals(argument.expected, actual);
+        if (!success) {
             throw new RuntimeException("Test failed");
         }
     }
 
-    private static List<TestArgument> provideTestArguments() {
-        return List.of(
+    private static Stream<TestArgument> provideTestArguments() {
+        return Stream.of(
                 new TestArgument("", emptyMap()),
                 new TestArgument(" 123!4,  32 !! ", emptyMap()),
                 new TestArgument(
