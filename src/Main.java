@@ -17,6 +17,7 @@ public final class Main {
         testCounter(new MultiThreadLetterFrequencyCounter(5));
     }
 
+    //TODO: put all for test in 'TestUtil'
     private static void testCounter(final LetterFrequencyCounter counter) {
         provideTestArguments().forEach(argument -> testCounter(counter, argument));
     }
