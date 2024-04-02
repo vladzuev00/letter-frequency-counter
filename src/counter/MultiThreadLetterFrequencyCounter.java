@@ -5,12 +5,16 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+import static java.lang.Math.ceil;
+import static java.lang.Math.min;
 import static java.lang.Thread.currentThread;
+import static java.util.stream.IntStream.range;
 
 public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCounter {
+    private final int subtaskCount;
 
     public MultiThreadLetterFrequencyCounter(final int subtaskCount) {
-        super(subtaskCount);
+        this.subtaskCount = subtaskCount;
     }
 
     @Override
@@ -19,9 +23,29 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
     }
 
     @Override
+    protected Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator,
+                                                            final char[] chars) {
+        final int subtaskCharCount = findSubtaskCharCount(chars);
+        return range(0, subtaskCount).mapToObj(i -> createSubtask(accumulator, chars, subtaskCharCount, i));
+    }
+
+    @Override
     protected void execute(final Stream<LetterFrequencySubtask> subtasks) {
         final List<Thread> threads = run(subtasks);
         waitUntilFinish(threads);
+    }
+
+    private int findSubtaskCharCount(final char[] chars) {
+        return (int) ceil((double) chars.length / subtaskCount);
+    }
+
+    private static LetterFrequencySubtask createSubtask(final Map<Character, Integer> accumulator,
+                                                        final char[] chars,
+                                                        final int subtaskCharCount,
+                                                        final int subtaskIndex) {
+        final int start = subtaskIndex * subtaskCharCount;
+        final int end = min((subtaskIndex + 1) * subtaskCharCount, chars.length);
+        return new LetterFrequencySubtask(accumulator, chars, start, end);
     }
 
     private List<Thread> run(final Stream<LetterFrequencySubtask> subtasks) {

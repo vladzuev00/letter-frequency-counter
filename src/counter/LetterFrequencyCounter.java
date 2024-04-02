@@ -3,46 +3,23 @@ package counter;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static java.lang.Math.ceil;
-import static java.lang.Math.min;
 import static java.util.stream.IntStream.range;
 
 public abstract class LetterFrequencyCounter {
-    private final int subtaskCount;
-
-    public LetterFrequencyCounter(final int subtaskCount) {
-        this.subtaskCount = subtaskCount;
-    }
 
     public final Map<Character, Integer> count(final String input) {
         final Map<Character, Integer> accumulator = createAccumulator();
-        final Stream<LetterFrequencySubtask> subtasks = createSubtasks(accumulator, input);
+        final Stream<LetterFrequencySubtask> subtasks = createSubtasks(accumulator, input.toCharArray());
         execute(subtasks);
         return accumulator;
     }
 
     protected abstract Map<Character, Integer> createAccumulator();
 
+    protected abstract Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator,
+                                                                     final char[] chars);
+
     protected abstract void execute(final Stream<LetterFrequencySubtask> subtasks);
-
-    private Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator, final String input) {
-        final char[] chars = input.toCharArray();
-        final int subtaskCharCount = findSubtaskCharCount(chars);
-        return range(0, subtaskCount).mapToObj(i -> createSubtask(accumulator, chars, subtaskCharCount, i));
-    }
-
-    private int findSubtaskCharCount(final char[] chars) {
-        return (int) ceil((double) chars.length / subtaskCount);
-    }
-
-    private static LetterFrequencySubtask createSubtask(final Map<Character, Integer> accumulator,
-                                                        final char[] chars,
-                                                        final int subtaskCharCount,
-                                                        final int subtaskIndex) {
-        final int start = subtaskIndex * subtaskCharCount;
-        final int end = min((subtaskIndex + 1) * subtaskCharCount, chars.length);
-        return new LetterFrequencySubtask(accumulator, chars, start, end);
-    }
 
     protected static final class LetterFrequencySubtask {
         private final Map<Character, Integer> accumulator;
