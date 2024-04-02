@@ -41,10 +41,10 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
 
     private static LetterFrequencySubtask createSubtask(final Map<Character, Integer> accumulator,
                                                         final char[] chars,
-                                                        final int subtaskCharCount,
-                                                        final int subtaskIndex) {
-        final int start = subtaskIndex * subtaskCharCount;
-        final int end = min((subtaskIndex + 1) * subtaskCharCount, chars.length);
+                                                        final int charCount,
+                                                        final int index) {
+        final int start = index * charCount;
+        final int end = min((index + 1) * charCount, chars.length);
         return new LetterFrequencySubtask(accumulator, chars, start, end);
     }
 
