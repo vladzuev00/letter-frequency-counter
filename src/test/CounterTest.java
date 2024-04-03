@@ -11,6 +11,7 @@ import static java.util.Map.entry;
 import static java.util.Map.ofEntries;
 
 public final class CounterTest {
+
     public static void testCounter(final LetterFrequencyCounter counter) {
         provideTestArguments().forEach(argument -> testCounter(counter, argument));
     }
