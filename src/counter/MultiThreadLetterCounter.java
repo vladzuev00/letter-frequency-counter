@@ -10,10 +10,10 @@ import static java.lang.Math.min;
 import static java.lang.Thread.currentThread;
 import static java.util.stream.IntStream.range;
 
-public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCounter {
+public final class MultiThreadLetterCounter extends LetterCounter {
     private final int subtaskCount;
 
-    public MultiThreadLetterFrequencyCounter(final int subtaskCount) {
+    public MultiThreadLetterCounter(final int subtaskCount) {
         this.subtaskCount = subtaskCount;
     }
 
@@ -23,14 +23,13 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
     }
 
     @Override
-    protected Stream<CountingSubtask> createSubtasks(final Map<Character, Integer> accumulator,
-                                                     final char[] chars) {
+    protected Stream<Subtask> createSubtasks(final Map<Character, Integer> accumulator, final char[] chars) {
         final int subtaskCharCount = findSubtaskCharCount(chars);
         return range(0, subtaskCount).mapToObj(i -> createSubtask(accumulator, chars, subtaskCharCount, i));
     }
 
     @Override
-    protected void execute(final Stream<CountingSubtask> subtasks) {
+    protected void execute(final Stream<Subtask> subtasks) {
         final List<Thread> threads = run(subtasks);
         waitUntilFinish(threads);
     }
@@ -39,20 +38,20 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
         return (int) ceil((double) chars.length / subtaskCount);
     }
 
-    private static CountingSubtask createSubtask(final Map<Character, Integer> accumulator,
-                                                 final char[] chars,
-                                                 final int charCount,
-                                                 final int index) {
+    private static Subtask createSubtask(final Map<Character, Integer> accumulator,
+                                         final char[] chars,
+                                         final int charCount,
+                                         final int index) {
         final int start = index * charCount;
         final int end = min((index + 1) * charCount, chars.length);
-        return new CountingSubtask(accumulator, chars, start, end);
+        return new Subtask(accumulator, chars, start, end);
     }
 
-    private List<Thread> run(final Stream<CountingSubtask> subtasks) {
+    private List<Thread> run(final Stream<Subtask> subtasks) {
         return subtasks.map(this::run).toList();
     }
 
-    private Thread run(final CountingSubtask subtask) {
+    private Thread run(final Subtask subtask) {
         final Thread thread = new Thread(subtask::execute);
         thread.start();
         return thread;

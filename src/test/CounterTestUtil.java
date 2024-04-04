@@ -1,6 +1,6 @@
 package test;
 
-import counter.LetterFrequencyCounter;
+import counter.LetterCounter;
 
 import java.util.Map;
 import java.util.Objects;
@@ -12,11 +12,11 @@ import static java.util.Map.ofEntries;
 
 public final class CounterTestUtil {
 
-    public static void testCounter(final LetterFrequencyCounter counter) {
-        provideTestArguments().forEach(argument -> testCounter(counter, argument));
+    public static void test(final LetterCounter counter) {
+        provideArguments().forEach(argument -> test(counter, argument));
     }
 
-    private static void testCounter(final LetterFrequencyCounter counter, final TestArgument argument) {
+    private static void test(final LetterCounter counter, final Argument argument) {
         final Map<Character, Integer> actual = counter.count(argument.givenText);
         final boolean success = Objects.equals(argument.expected, actual);
         if (!success) {
@@ -24,15 +24,15 @@ public final class CounterTestUtil {
         }
     }
 
-    private static Stream<TestArgument> provideTestArguments() {
+    private static Stream<Argument> provideArguments() {
         return Stream.of(
-                new TestArgument("", emptyMap()),
-                new TestArgument(" 123!4,  32 !! ", emptyMap()),
-                new TestArgument(
+                new Argument("", emptyMap()),
+                new Argument(" 123!4,  32 !! ", emptyMap()),
+                new Argument(
                         "Hello world!!!",
                         Map.of('r', 1, 'd', 1, 'e', 1, 'w', 1, 'h', 1, 'l', 3, 'o', 2)
                 ),
-                new TestArgument(
+                new Argument(
                         """
                                 A hash table supporting full concurrency of retrievals and high expected concurrency for updates.
                                 This class obeys the same functional specification as Hashtable, and includes versions of methods
@@ -83,11 +83,11 @@ public final class CounterTestUtil {
         );
     }
 
-    private static final class TestArgument {
+    private static final class Argument {
         private final String givenText;
         private final Map<Character, Integer> expected;
 
-        public TestArgument(final String givenText, final Map<Character, Integer> expected) {
+        public Argument(final String givenText, final Map<Character, Integer> expected) {
             this.givenText = givenText;
             this.expected = expected;
         }

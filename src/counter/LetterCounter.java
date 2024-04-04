@@ -5,32 +5,31 @@ import java.util.stream.Stream;
 
 import static java.util.stream.IntStream.range;
 
-public abstract class LetterFrequencyCounter {
+public abstract class LetterCounter {
 
     public final Map<Character, Integer> count(final String input) {
         final Map<Character, Integer> accumulator = createAccumulator();
-        final Stream<CountingSubtask> subtasks = createSubtasks(accumulator, input.toCharArray());
+        final Stream<Subtask> subtasks = createSubtasks(accumulator, input.toCharArray());
         execute(subtasks);
         return accumulator;
     }
 
     protected abstract Map<Character, Integer> createAccumulator();
 
-    protected abstract Stream<CountingSubtask> createSubtasks(final Map<Character, Integer> accumulator,
-                                                              final char[] chars);
+    protected abstract Stream<Subtask> createSubtasks(final Map<Character, Integer> accumulator, final char[] chars);
 
-    protected abstract void execute(final Stream<CountingSubtask> subtasks);
+    protected abstract void execute(final Stream<Subtask> subtasks);
 
-    protected static final class CountingSubtask {
+    protected static final class Subtask {
         private final Map<Character, Integer> accumulator;
         private final char[] chars;
         private final int start;
         private final int end;
 
-        public CountingSubtask(final Map<Character, Integer> accumulator,
-                               final char[] chars,
-                               final int start,
-                               final int end) {
+        public Subtask(final Map<Character, Integer> accumulator,
+                       final char[] chars,
+                       final int start,
+                       final int end) {
             this.accumulator = accumulator;
             this.chars = chars;
             this.start = start;

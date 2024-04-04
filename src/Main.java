@@ -1,12 +1,12 @@
-import counter.MultiThreadLetterFrequencyCounter;
-import counter.SingleThreadLetterFrequencyCounter;
+import counter.MultiThreadLetterCounter;
+import counter.SingleThreadLetterCounter;
 
-import static test.CounterTestUtil.testCounter;
+import static test.CounterTestUtil.test;
 
 public final class Main {
 
     public static void main(final String[] args) {
-        testCounter(new SingleThreadLetterFrequencyCounter());
-        testCounter(new MultiThreadLetterFrequencyCounter(5));
+        test(new SingleThreadLetterCounter());
+        test(new MultiThreadLetterCounter(5));
     }
 }
