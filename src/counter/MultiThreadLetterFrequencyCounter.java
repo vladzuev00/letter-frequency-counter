@@ -23,14 +23,14 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
     }
 
     @Override
-    protected Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator,
-                                                            final char[] chars) {
+    protected Stream<CountingSubtask> createSubtasks(final Map<Character, Integer> accumulator,
+                                                     final char[] chars) {
         final int subtaskCharCount = findSubtaskCharCount(chars);
         return range(0, subtaskCount).mapToObj(i -> createSubtask(accumulator, chars, subtaskCharCount, i));
     }
 
     @Override
-    protected void execute(final Stream<LetterFrequencySubtask> subtasks) {
+    protected void execute(final Stream<CountingSubtask> subtasks) {
         final List<Thread> threads = run(subtasks);
         waitUntilFinish(threads);
     }
@@ -39,20 +39,20 @@ public final class MultiThreadLetterFrequencyCounter extends LetterFrequencyCoun
         return (int) ceil((double) chars.length / subtaskCount);
     }
 
-    private static LetterFrequencySubtask createSubtask(final Map<Character, Integer> accumulator,
-                                                        final char[] chars,
-                                                        final int charCount,
-                                                        final int index) {
+    private static CountingSubtask createSubtask(final Map<Character, Integer> accumulator,
+                                                 final char[] chars,
+                                                 final int charCount,
+                                                 final int index) {
         final int start = index * charCount;
         final int end = min((index + 1) * charCount, chars.length);
-        return new LetterFrequencySubtask(accumulator, chars, start, end);
+        return new CountingSubtask(accumulator, chars, start, end);
     }
 
-    private List<Thread> run(final Stream<LetterFrequencySubtask> subtasks) {
+    private List<Thread> run(final Stream<CountingSubtask> subtasks) {
         return subtasks.map(this::run).toList();
     }
 
-    private Thread run(final LetterFrequencySubtask subtask) {
+    private Thread run(final CountingSubtask subtask) {
         final Thread thread = new Thread(subtask::execute);
         thread.start();
         return thread;

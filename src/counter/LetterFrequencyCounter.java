@@ -9,28 +9,28 @@ public abstract class LetterFrequencyCounter {
 
     public final Map<Character, Integer> count(final String input) {
         final Map<Character, Integer> accumulator = createAccumulator();
-        final Stream<LetterFrequencySubtask> subtasks = createSubtasks(accumulator, input.toCharArray());
+        final Stream<CountingSubtask> subtasks = createSubtasks(accumulator, input.toCharArray());
         execute(subtasks);
         return accumulator;
     }
 
     protected abstract Map<Character, Integer> createAccumulator();
 
-    protected abstract Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator,
-                                                                     final char[] chars);
+    protected abstract Stream<CountingSubtask> createSubtasks(final Map<Character, Integer> accumulator,
+                                                              final char[] chars);
 
-    protected abstract void execute(final Stream<LetterFrequencySubtask> subtasks);
+    protected abstract void execute(final Stream<CountingSubtask> subtasks);
 
-    protected static final class LetterFrequencySubtask {
+    protected static final class CountingSubtask {
         private final Map<Character, Integer> accumulator;
         private final char[] chars;
         private final int start;
         private final int end;
 
-        public LetterFrequencySubtask(final Map<Character, Integer> accumulator,
-                                      final char[] chars,
-                                      final int start,
-                                      final int end) {
+        public CountingSubtask(final Map<Character, Integer> accumulator,
+                               final char[] chars,
+                               final int start,
+                               final int end) {
             this.accumulator = accumulator;
             this.chars = chars;
             this.start = start;

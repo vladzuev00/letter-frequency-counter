@@ -1,7 +1,7 @@
 import counter.MultiThreadLetterFrequencyCounter;
 import counter.SingleThreadLetterFrequencyCounter;
 
-import static test.CounterTest.testCounter;
+import static test.CounterTestUtil.testCounter;
 
 public final class Main {
 

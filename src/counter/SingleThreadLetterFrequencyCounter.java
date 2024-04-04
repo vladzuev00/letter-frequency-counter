@@ -12,13 +12,12 @@ public final class SingleThreadLetterFrequencyCounter extends LetterFrequencyCou
     }
 
     @Override
-    protected Stream<LetterFrequencySubtask> createSubtasks(final Map<Character, Integer> accumulator,
-                                                            final char[] chars) {
-        return Stream.of(new LetterFrequencySubtask(accumulator, chars, 0, chars.length));
+    protected Stream<CountingSubtask> createSubtasks(final Map<Character, Integer> accumulator, final char[] chars) {
+        return Stream.of(new CountingSubtask(accumulator, chars, 0, chars.length));
     }
 
     @Override
-    protected void execute(final Stream<LetterFrequencySubtask> subtasks) {
-        subtasks.forEach(LetterFrequencySubtask::execute);
+    protected void execute(final Stream<CountingSubtask> subtasks) {
+        subtasks.forEach(CountingSubtask::execute);
     }
 }

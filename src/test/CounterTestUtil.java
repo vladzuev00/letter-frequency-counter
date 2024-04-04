@@ -10,7 +10,7 @@ import static java.util.Collections.emptyMap;
 import static java.util.Map.entry;
 import static java.util.Map.ofEntries;
 
-public final class CounterTest {
+public final class CounterTestUtil {
 
     public static void testCounter(final LetterFrequencyCounter counter) {
         provideTestArguments().forEach(argument -> testCounter(counter, argument));
