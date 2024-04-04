@@ -6,14 +6,13 @@ import java.util.stream.Stream;
 
 public final class SingleThreadLetterCounter extends LetterCounter {
 
-    @Override
-    protected Map<Character, Integer> createAccumulator() {
-        return new HashMap<>();
+    public SingleThreadLetterCounter() {
+        super(1);
     }
 
     @Override
-    protected Stream<Subtask> createSubtasks(final Map<Character, Integer> accumulator, final char[] chars) {
-        return Stream.of(new Subtask(accumulator, chars, 0, chars.length));
+    protected Map<Character, Integer> createAccumulator() {
+        return new HashMap<>();
     }
 
     @Override

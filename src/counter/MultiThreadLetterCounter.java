@@ -5,16 +5,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import static java.lang.Math.ceil;
-import static java.lang.Math.min;
 import static java.lang.Thread.currentThread;
-import static java.util.stream.IntStream.range;
 
 public final class MultiThreadLetterCounter extends LetterCounter {
-    private final int subtaskCount;
 
     public MultiThreadLetterCounter(final int subtaskCount) {
-        this.subtaskCount = subtaskCount;
+        super(subtaskCount);
     }
 
     @Override
@@ -23,28 +19,9 @@ public final class MultiThreadLetterCounter extends LetterCounter {
     }
 
     @Override
-    protected Stream<Subtask> createSubtasks(final Map<Character, Integer> accumulator, final char[] chars) {
-        final int subtaskCharCount = findSubtaskCharCount(chars);
-        return range(0, subtaskCount).mapToObj(i -> createSubtask(accumulator, chars, subtaskCharCount, i));
-    }
-
-    @Override
     protected void execute(final Stream<Subtask> subtasks) {
         final List<Thread> threads = run(subtasks);
         waitUntilFinish(threads);
-    }
-
-    private int findSubtaskCharCount(final char[] chars) {
-        return (int) ceil((double) chars.length / subtaskCount);
-    }
-
-    private static Subtask createSubtask(final Map<Character, Integer> accumulator,
-                                         final char[] chars,
-                                         final int charCount,
-                                         final int index) {
-        final int start = index * charCount;
-        final int end = min((index + 1) * charCount, chars.length);
-        return new Subtask(accumulator, chars, start, end);
     }
 
     private List<Thread> run(final Stream<Subtask> subtasks) {
